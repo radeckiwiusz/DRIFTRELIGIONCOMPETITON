@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DriftReligion Competition</title>
+  <style>
+    :root{
+      --bg:#0a0b0e;
+      --card:#11131a;
+      --accent:#ff4d6d;
+      --muted:#9aa0a6;
+      font-family:'Inter',sans-serif;
+    }
+    body{margin:0;background:var(--bg);color:white;}
+
+    /* TOP NAV */
+    nav{
+      display:flex;
+      gap:30px;
+      padding:20px;
+      background:#0c0d11;
+      border-bottom:1px solid rgba(255,255,255,0.08);
+      position:sticky;
+      top:0;
+      z-index:10;
+    }
+    nav a{
+      color:white;
+      text-decoration:none;
+      font-weight:600;
+      cursor:pointer;
+    }
+
+    .page{display:none;max-width:1200px;margin:0 auto;padding:20px;}
+    .card{background:var(--card);padding:22px;border-radius:14px;margin-bottom:24px;}
+    table{width:100%;border-collapse:collapse;margin-top:10px;}
+    th,td{padding:12px 10px;border-bottom:1px solid rgba(255,255,255,0.05);}    
+    .partners{display:flex;gap:10px;flex-wrap:wrap;}
+    .p-item{background:#161821;padding:12px 16px;border-radius:10px;font-weight:600;}
+
+    /* HOME */
+    #home{display:block;text-align:center;padding-top:80px;}
+    #home h1{font-size:40px;margin-bottom:10px;}
+    #home p{color:var(--muted);font-size:18px;}
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a onclick="showPage('home')">Home</a>
+    <a onclick="showPage('standings')">Standings</a>
+    <a onclick="showPage('schedule')">Schedule</a>
+    <a onclick="showPage('partners')">Partners</a>
+    <a onclick="showPage('contact')">Contact</a>
+  </nav>
+
+  <!-- HOME PAGE -->
+  <section id="home" class="page">
+    <h1>Welcome to DriftReligion Competition</h1>
+    <p>Your official Hot Wheels drifting league.</p>
+  </section>
+
+  <!-- STANDINGS PAGE -->
+  <section id="standings" class="page">
+    <div class="card">
+      <h2>Current Standings</h2>
+      <table id="standingsTable">
+        <thead><tr><th>#</th><th>Driver</th><th>Points</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>Add new driver</h2>
+      <input id="dName" placeholder="Driver name" />
+      <input id="dPoints" type="number" placeholder="Points" />
+      <button onclick="addDriver()">Add</button>
+      <button onclick="deleteDriver()">Delete</button>
+    </div>
+  </section>
+
+  <!-- SCHEDULE PAGE -->
+  <section id="schedule" class="page">
+    <div class="card">
+      <h2>Schedule</h2>
+      <p>:</p>
+      SOON.........
+    </div>
+  </section>
+
+  <!-- PARTNERS -->
+  <section id="partners" class="page">
+    <div class="card">
+      <h2>Partners</h2>
+      <div class="partners">
+        <div class="p-item">FMICE</div>
+        <div class="p-item">ECUMaster</div>
+        <div class="p-item">Wisefab</div>
+        <div class="p-item">BC Racing</div>
+        <div class="p-item">RadeckiwiuszGarage</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="page">
+    <div class="card">
+      <h2>Founder & Contact</h2>
+      <p><strong>Radeckiwiusz</strong></p>
+      <p>Phone: +48 600 000 000</p>
+    </div>
+  </section>
+
+<script>
+let drivers = JSON.parse(localStorage.getItem('drivers') || '[]');
+render();
+
+function render(){
+  const tbody = document.querySelector('#standingsTable tbody');
+  tbody.innerHTML = '';
+  drivers.forEach((d,i)=>{
+    tbody.innerHTML += `<tr><td>${i+1}</td><td>${d.name}</td><td>${d.points}</td><td><button onclick="deleteDriverAt(${i})" style="background:#b30021;color:white;padding:6px 8px;border-radius:6px;border:none;cursor:pointer;">Delete</button></td></tr>`;
+  });
+  localStorage.setItem('drivers',JSON.stringify(drivers));
+}
+
+function addDriver(){
+  let name=document.getElementById('dName').value;
+  let pts=document.getElementById('dPoints').value||0;
+  if(!name) return;
+  drivers.push({name:name,points:parseInt(pts)});
+  render();
+}
+
+function deleteDriver(){
+  // remove last driver
+  if(drivers.length===0) return;
+  drivers.pop();
+  render();
+}
+
+function deleteDriverAt(index){
+  drivers.splice(index,1);
+  render();
+}
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.style.display='none');
+  document.getElementById(id).style.display='block';
+}
+</script>
+</body>
+</html>
